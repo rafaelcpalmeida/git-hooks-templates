@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# List the branches that don't apply bellow
+if [ -z "$BRANCHES_TO_IGNORE" ]; then
+  BRANCHES_TO_IGNORE=(master develop staging test)
+fi
+
+# Pick the current branch name and check if it is excluded
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+BRANCH_IGNORED=$(printf "%s\n" "${BRANCHES_TO_IGNORE[@]}" | grep -c "^$BRANCH_NAME$")
+
+# Remove the unnecessary parts
+TRIMMED=$(echo $BRANCH_NAME | sed -E -e 's:^(\w+)\/([^-]*-[^-]*)-.*:\2:' -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/')  
+
+# If it isn't excluded, prepend the part that interests us to the given commit message
+if [ -n "$BRANCH_NAME" ] &&  ! [[ $BRANCH_IGNORED -eq 1 ]]; then
+  sed -i.bak -e "1s/^/$TRIMMED - /" $1
+fi
