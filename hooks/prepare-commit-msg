@@ -13,6 +13,6 @@ BRANCH_IGNORED=$(printf "%s\n" "${BRANCHES_TO_IGNORE[@]}" | grep -c "^$BRANCH_NA
 TRIMMED=$(echo $BRANCH_NAME | perl -n -e '/^(\w+)\/([^-]*-[^-]*\d)-.*/ && print $2' | sed -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/')
 
 # If it isn't excluded, prepend the part that interests us to the given commit message
-if [ -n "$BRANCH_NAME" ] &&  ! [[ $BRANCH_IGNORED -eq 1 ]]; then
+if [ -n "$BRANCH_NAME" ] && ! [[ $TRIMMED -eq "" ]] && ! [[ $BRANCH_IGNORED -eq 1 ]]; then
   sed -i.bak -e "1s/^/$TRIMMED - /" $1
 fi
