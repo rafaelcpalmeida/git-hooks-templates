@@ -10,7 +10,7 @@ BRANCH_NAME=$(git symbolic-ref --short HEAD)
 BRANCH_IGNORED=$(printf "%s\n" "${BRANCHES_TO_IGNORE[@]}" | grep -c "^$BRANCH_NAME$")
 
 # Remove the unnecessary parts
-TRIMMED=$(echo $BRANCH_NAME | perl -n -e '/^(\w+)\/([^-]*-[^-]*\d)-.*/ && print $2' | sed -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/')
+TRIMMED=$(echo $BRANCH_NAME | perl -n -e '/^(\w+)\/([^-]*-[^-]*\d)-?.*/ && print $2' | sed -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/')
 
 # If it isn't excluded, prepend the part that interests us to the given commit message
 if [ -n "$BRANCH_NAME" ] && ! [[ $TRIMMED -eq "" ]] && ! [[ $BRANCH_IGNORED -eq 1 ]]; then
